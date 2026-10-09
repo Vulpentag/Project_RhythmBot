@@ -1,6 +1,6 @@
 # Project_RhythmBot
 RhythmBot es un projecto pensado en automizar y tener una forma afk de ganar puntos en un juego de ritmo, hecho con c++
-y usando deepseek como apoyo. este projecto se hizo en una laptop con: \n
+y usando deepseek como apoyo. este projecto se hizo en una laptop con:
  |AMD Athlon 300U with Radeon Vega Mobile Gfx 2.40 GHz
  |8 GB RAM (5.94 GB usable)
  |Windows 10 64-bit
