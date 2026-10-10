@@ -3,7 +3,7 @@
   Cómo descargar, compilar y modificar el proyecto
 ========================================================================
 
-Versión: 1.0.0
+Versión: alpha 0.1.0
 Última actualización: Octubre 2026
 Repositorio: https://github.com/Vulpentag/Project_RhythmBot
 
