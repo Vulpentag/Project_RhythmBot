@@ -1,0 +1,526 @@
+========================================================================
+  RHYTHMBOT - GUÍA PARA DESARROLLADORES
+  Cómo descargar, compilar y modificar el proyecto
+========================================================================
+
+Versión: 1.0.0
+Última actualización: Octubre 2026
+Repositorio: https://github.com/Vulpentag/Project_RhythmBot
+
+========================================================================
+  ÍNDICE
+========================================================================
+
+  1. ¿Qué es RhythmBot?
+  2. Requisitos previos
+  3. Instalación paso a paso
+    3.1. Instalar Visual Studio Build Tools
+    3.2. Instalar CMake
+    3.3. Instalar Git
+    3.4. Instalar vcpkg
+    3.5. Instalar OpenCV
+  4. Descargar el proyecto
+  5. Compilar el proyecto
+    5.1. Desde VS Code (recomendado)
+    5.2. Desde terminal
+  6. Ejecutar el bot
+  7. Estructura del código
+  8. Cómo modificar el bot
+    8.1. Cambiar las teclas de los carriles
+    8.2. Ajustar la región de captura
+    8.3. Ajustar el color de las notas
+    8.4. Cambiar la lógica de detección
+    8.5. Añadir un nuevo carril
+  9. Solución de problemas comunes
+  10. Cómo contribuir
+
+========================================================================
+  1. ¿QUÉ ES RHYTHMBOT?
+========================================================================
+
+RhythmBot es un bot experimental para juegos de ritmo en Windows.
+Captura una región de la pantalla, detecta notas por color con OpenCV
+y simula pulsaciones de teclado para los cuatro carriles configurados.
+
+IMPORTANTE: este es un proyecto educativo. Puede violar los Términos
+de Servicio de juegos online. Úsalo solo en juegos offline o entornos
+controlados.
+
+Lenguaje: C++17
+Compilador: MSVC (Visual Studio)
+Visión: OpenCV 4.x
+Build system: CMake
+Gestor de paquetes: vcpkg
+
+========================================================================
+  2. REQUISITOS PREVIOS
+========================================================================
+
+Antes de empezar, asegúrate de tener:
+
+  - Windows 10 u 11 (64 bits)
+  - Al menos 5 GB de espacio libre en disco
+  - Conexión a internet (para descargar dependencias)
+  - 30-90 minutos de paciencia para la primera instalación
+
+========================================================================
+  3. INSTALACIÓN PASO A PASO
+========================================================================
+
+------------------------------------------------------------------------
+  3.1. Instalar Visual Studio Build Tools
+------------------------------------------------------------------------
+
+Necesitas el compilador de C++ de Microsoft.
+
+  1. Descarga "Build Tools for Visual Studio 2022" desde:
+     https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
+
+  2. Ejecuta el instalador.
+
+  3. En la pestaña "Cargas de trabajo", marca:
+     - "Desarrollo para el escritorio con C++"
+
+  4. En la pestaña "Componentes individuales", verifica que estén:
+     - MSVC v143 - VS 2022 C++ x64/x86 build tools (Latest)
+     - Windows 10 SDK o Windows 11 SDK
+
+  5. Pulsa "Instalar" y espera (20-40 minutos).
+
+  6. Reinicia el equipo al terminar.
+
+Verificación: abre PowerShell y ejecuta:
+
+    Get-ChildItem "C:\Program Files\Microsoft Visual Studio" -Directory
+
+Debe aparecer una carpeta (por ejemplo "2022" o "18").
+
+------------------------------------------------------------------------
+  3.2. Instalar CMake
+------------------------------------------------------------------------
+
+  1. Descarga CMake desde:
+     https://cmake.org/download/
+
+  2. Ejecuta el instalador.
+
+  3. IMPORTANTE: marca la opción:
+     "Add CMake to the system PATH"
+
+  4. Instala con las opciones por defecto.
+
+Verificación: abre una terminal NUEVA y ejecuta:
+
+    cmake --version
+
+Debe mostrar algo como "cmake version 3.28.0".
+
+------------------------------------------------------------------------
+  3.3. Instalar Git
+------------------------------------------------------------------------
+
+  1. Descarga Git for Windows desde:
+     https://git-scm.com/download/win
+
+  2. Instala con las opciones por defecto.
+
+Verificación:
+
+    git --version
+
+Debe mostrar algo como "git version 2.43.0".
+
+------------------------------------------------------------------------
+  3.4. Instalar vcpkg
+------------------------------------------------------------------------
+
+vcpkg es el gestor de paquetes para C++. Con él instalamos OpenCV
+sin dolores de cabeza.
+
+  1. Abre PowerShell.
+
+  2. Clona vcpkg en C:\vcpkg (evita rutas con espacios):
+
+     git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+
+  3. Entra a la carpeta y ejecuta el bootstrap:
+
+     cd C:\vcpkg
+     .\bootstrap-vcpkg.bat
+
+  4. Añade vcpkg al PATH del usuario:
+
+     [Environment]::SetEnvironmentVariable(
+         "Path",
+         [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\vcpkg",
+         "User"
+     )
+
+  5. Añade la variable de entorno VCPKG_ROOT:
+
+     [Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:\vcpkg", "User")
+
+  6. CIERRA TODAS las terminales y VS Code, y vuelve a abrirlos.
+
+Verificación (en una terminal NUEVA):
+
+    vcpkg version
+
+Debe mostrar la versión sin errores.
+
+------------------------------------------------------------------------
+  3.5. Instalar OpenCV
+------------------------------------------------------------------------
+
+Con vcpkg ya instalado, instala OpenCV:
+
+    vcpkg install opencv[highgui]:x64-windows
+
+ADVERTENCIA: esta operación puede tardar entre 30 y 90 minutos
+porque vcpkg compila OpenCV desde código fuente. Es normal.
+
+Verificación:
+
+    vcpkg list | Select-String opencv4
+
+Debe mostrar varias líneas con "opencv4" y "opencv4[highgui]".
+
+========================================================================
+  4. DESCARGAR EL PROYECTO
+========================================================================
+
+Tienes dos opciones:
+
+OPCIÓN A: Clonar con Git (recomendado para contribuir)
+
+    cd C:\Users\TU_USUARIO\Documents
+    git clone https://github.com/Vulpentag/Project_RhythmBot.git
+    cd Project_RhythmBot
+
+OPCIÓN B: Descargar ZIP (más simple)
+
+  1. Ve a https://github.com/Vulpentag/Project_RhythmBot
+  2. Pulsa el botón verde "Code"
+  3. Elige "Download ZIP"
+  4. Descomprime en una carpeta (ej. C:\Users\TU_USUARIO\Documents\RhythmBot)
+
+========================================================================
+  5. COMPILAR EL PROYECTO
+========================================================================
+
+------------------------------------------------------------------------
+  5.1. Desde VS Code (recomendado)
+------------------------------------------------------------------------
+
+  1. Instala VS Code: https://code.visualstudio.com/
+
+  2. Instala las extensiones:
+     - "C/C++" de Microsoft
+     - "CMake Tools" de Microsoft
+
+  3. Abre la carpeta del proyecto:
+     File → Open Folder → selecciona la carpeta RhythmBot
+
+  4. Espera a que CMake Tools se active (aparece un mensaje abajo).
+
+  5. Selecciona el kit de compilación:
+     Ctrl+Shift+P → escribe "CMake: Select a Kit"
+     Elige el kit "Visual Studio Community 2022 Release - amd64"
+
+  6. Configura el proyecto:
+     Ctrl+Shift+P → "CMake: Delete Cache and Reconfigure"
+     Espera a que termine. Debe decir:
+     "-- Configuring done"
+     "-- Generating done"
+
+  7. Compila:
+     Ctrl+Shift+B (o pulsa el botón "Build" en la barra inferior)
+     El primer build tarda 2-5 minutos.
+
+  8. Verifica que existe el ejecutable:
+     build\Debug\RhythmBot.exe
+
+------------------------------------------------------------------------
+  5.2. Desde terminal
+------------------------------------------------------------------------
+
+    cd C:\Users\TU_USUARIO\Documents\RhythmBot
+    mkdir build
+    cd build
+
+    cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -A x64
+
+    cmake --build . --config Debug
+
+========================================================================
+  6. EJECUTAR EL BOT
+========================================================================
+
+Modo calibración (para ajustar la región de captura):
+
+    .\build\Debug\RhythmBot.exe calibrar
+
+  - Se abre una ventana con la captura ampliada x2.
+  - Ajusta las trackbars para encuadrar los carriles del juego.
+  - Haz clic sobre una nota para ver su color (BGR y HSV) en la consola.
+  - Pulsa ESC para cerrar.
+
+Modo bot (para automatizar):
+
+    .\build\Debug\RhythmBot.exe
+
+  - El bot empieza a capturar y pulsar teclas.
+  - Pulsa F12 para detenerlo.
+
+IMPORTANTE: ejecuta el .exe como ADMINISTRADOR para que SendInput
+funcione en algunos juegos.
+
+========================================================================
+  7. ESTRUCTURA DEL CÓDIGO
+========================================================================
+
+RhythmBot/
+├── CMakeLists.txt          # Configuración de compilación
+├── README.md               # Documentación principal
+├── INSTRUCCIONES.txt       # Este archivo
+├── LICENSE                 # Licencia MIT
+├── .gitignore              # Archivos ignorados por Git
+│
+├── include/                # Archivos de cabecera (.h)
+│   ├── Config.h            # Parámetros del bot
+│   ├── ScreenCapture.h     # Interfaz de captura de pantalla
+│   ├── NoteDetector.h      # Interfaz del detector de notas
+│   ├── KeySimulator.h      # Interfaz del simulador de teclado
+│   ├── Controller.h        # Interfaz del controlador principal
+│   └── Calibrator.h        # Interfaz del modo calibración
+│
+└── src/                    # Código fuente (.cpp)
+    ├── main.cpp            # Punto de entrada
+    ├── ScreenCapture.cpp   # Implementación de captura (GDI)
+    ├── NoteDetector.cpp    # Implementación de detección (OpenCV)
+    ├── KeySimulator.cpp    # Implementación de SendInput
+    ├── Controller.cpp      # Lógica del bot
+    └── Calibrator.cpp      # Lógica del calibrador
+
+========================================================================
+  8. CÓMO MODIFICAR EL BOT
+========================================================================
+
+Todas las modificaciones de comportamiento se hacen en:
+    include/Config.h
+
+Después de modificar, RECOMPILA con Ctrl+Shift+B.
+
+------------------------------------------------------------------------
+  8.1. Cambiar las teclas de los carriles
+------------------------------------------------------------------------
+
+En Config.h, busca:
+
+    std::vector<WORD> laneKeys = { 'A', 'S', 'K', 'L' };
+
+Cambia las letras por las teclas que uses. Ejemplo con D, F, J, K:
+
+    std::vector<WORD> laneKeys = { 'D', 'F', 'J', 'K' };
+
+------------------------------------------------------------------------
+  8.2. Ajustar la región de captura
+------------------------------------------------------------------------
+
+En Config.h:
+
+    int captureX = 437;    // Coordenada X inicial (pantalla)
+    int captureY = 500;    // Coordenada Y inicial (pantalla)
+    int captureW = 490;    // Ancho de la región
+    int captureH = 190;    // Alto de la región
+
+Usa el modo calibración para encontrar los valores correctos.
+
+------------------------------------------------------------------------
+  8.3. Ajustar el color de las notas
+------------------------------------------------------------------------
+
+En Config.h, busca el rango HSV:
+
+    HsvRange noteHsv = { 100, 130, 100, 255, 100, 255 };
+    //                  Hmin Hmax Smin Smax Vmin Vmax
+
+Para encontrar los valores correctos:
+  1. Ejecuta el modo calibración.
+  2. Haz clic sobre una nota real del juego.
+  3. La consola imprime algo como: HSV=(110,150,200).
+  4. Ajusta el rango alrededor de ese valor:
+     Hmin = 110 - 10 = 100
+     Hmax = 110 + 10 = 120
+     Smin = 150 - 40 = 110
+     Vmin = 200 - 40 = 160
+
+------------------------------------------------------------------------
+  8.4. Cambiar la lógica de detección
+------------------------------------------------------------------------
+
+El detector está en src/NoteDetector.cpp, función detect().
+
+Actualmente:
+  1. Convierte el frame a HSV.
+  2. Aplica inRange para obtener una máscara.
+  3. Limpia la máscara con morfología.
+  4. Busca contornos con findContours.
+  5. Filtra por área mínima/máxima.
+
+Si tu juego tiene notas con forma específica (ej. círculos), puedes
+añadir cv::HoughCircles o matchTemplate.
+
+------------------------------------------------------------------------
+  8.5. Añadir un nuevo carril
+------------------------------------------------------------------------
+
+Actualmente el bot está configurado para 4 carriles. Para añadir uno más:
+
+  1. En Config.h, añade la tecla:
+     std::vector<WORD> laneKeys = { 'A', 'S', 'K', 'L', 'Ñ' };
+
+  2. Añade un color en laneColors (si monochromeNotes = false):
+     std::vector<HsvRange> laneColors = {
+         {  0,  10, 120, 255, 120, 255 },
+         { 20,  35, 120, 255, 120, 255 },
+         { 85, 100, 120, 255, 120, 255 },
+         {140, 170, 120, 255, 120, 255 },
+         { 50,  70, 120, 255, 120, 255 },  // nuevo carril
+     };
+
+  3. Ajusta la región de captura (captureW) para cubrir los 5 carriles.
+
+  4. Recompila.
+
+========================================================================
+  9. SOLUCIÓN DE PROBLEMAS COMUNES
+========================================================================
+
+------------------------------------------------------------------------
+  "vcpkg no se reconoce como un comando"
+------------------------------------------------------------------------
+
+La carpeta C:\vcpkg no está en el PATH. Repite el paso 3.4 y reinicia
+las terminales.
+
+------------------------------------------------------------------------
+  "Unable to find a valid Visual Studio instance"
+------------------------------------------------------------------------
+
+Las Build Tools no están instaladas correctamente. Repite el paso 3.1
+y asegúrate de marcar "Desarrollo para el escritorio con C++".
+
+------------------------------------------------------------------------
+  "Could not find CMAKE_CXX_COMPILER"
+------------------------------------------------------------------------
+
+No has seleccionado un kit en VS Code. Ejecuta:
+  Ctrl+Shift+P → "CMake: Select a Kit"
+
+------------------------------------------------------------------------
+  "opencv2/opencv.hpp: No such file or directory"
+------------------------------------------------------------------------
+
+Los paths de OpenCV no están configurados. Verifica:
+  1. Que vcpkg tiene OpenCV instalado: vcpkg list | Select-String opencv
+  2. Que el archivo .vscode/c_cpp_properties.json apunta a:
+     C:/vcpkg/installed/x64-windows/include/opencv4
+
+------------------------------------------------------------------------
+  El bot no pulsa teclas en el juego
+------------------------------------------------------------------------
+
+Posibles causas:
+  1. No ejecutaste el bot como administrador.
+  2. El juego usa anti-cheat que bloquea SendInput.
+  3. La ventana del juego no tiene el foco.
+  4. Los colores de las notas no coinciden con noteHsv.
+
+Prueba primero en el Bloc de notas. Si funciona allí pero no en el
+juego, es un problema de anti-cheat específico del juego.
+
+------------------------------------------------------------------------
+  El bot pulsa demasiado pronto o tarde
+------------------------------------------------------------------------
+
+Ajusta en Config.h:
+  - hitLineY: sube el valor para pulsar más tarde, baja para pulsar antes.
+  - hitToleranceY: aumenta si el bot se salta notas.
+
+Prueba valores entre 130 y 160 para hitLineY.
+
+========================================================================
+  10. CÓMO CONTRIBUIR
+========================================================================
+
+Si quieres aportar mejoras al proyecto:
+
+  1. Haz un FORK del repositorio en GitHub.
+
+  2. Clona tu fork en local:
+     git clone https://github.com/TU_USUARIO/Project_RhythmBot.git
+
+  3. Crea una rama para tu cambio:
+     git checkout -b feature/nueva-funcionalidad
+
+  4. Haz tus cambios y pruébalos.
+
+  5. Haz commit:
+     git add .
+     git commit -m "feat: descripción breve del cambio"
+
+  6. Sube tu rama:
+     git push origin feature/nueva-funcionalidad
+
+  7. Abre un Pull Request en GitHub explicando qué cambiaste.
+
+Ideas de contribuciones útiles:
+  - Soporte para más juegos de ritmo.
+  - Medidor automático de latencia.
+  - Interfaz gráfica.
+  - Soporte para notas largas (holds).
+  - Mejoras de rendimiento (DXGI en vez de GDI).
+  - Documentación y traducciones.
+
+========================================================================
+  RECURSOS ÚTILES
+========================================================================
+
+Documentación de OpenCV:
+  https://docs.opencv.org/
+
+Tutorial de C++ moderno:
+  https://isocpp.org/
+
+Documentación de vcpkg:
+  https://learn.microsoft.com/en-us/vcpkg/
+
+Documentación de CMake:
+  https://cmake.org/documentation/
+
+========================================================================
+  AVISO LEGAL
+========================================================================
+
+Este proyecto se distribuye con fines educativos y de investigación.
+El autor no se responsabiliza de:
+
+  - Sanciones, bloqueos o penalizaciones en juegos online.
+  - Violaciones de Términos de Servicio de terceros.
+  - Daños directos o indirectos derivados del uso.
+
+Úsalo bajo tu propia responsabilidad y solo en entornos controlados.
+
+========================================================================
+  FIN DE LAS INSTRUCCIONES
+========================================================================
+
+Si llegaste hasta aquí y lograste compilar el bot, ¡bien hecho!
+Si tienes problemas, abre un issue en GitHub con:
+  - Tu versión de Windows.
+  - Tu versión de Visual Studio.
+  - El mensaje de error completo.
+  - Los pasos que seguiste.
+
+¡Buena suerte! 🎼
