@@ -43,3 +43,41 @@ RhythmBot captura una región de la pantalla en tiempo real, detecta notas por c
 ---
 
 ## 📁 Estructura del proyecto
+
+```text
+RhythmBot/
+├── include/
+│   ├── Config.h             # Parámetros del bot
+│   ├── ScreenCapture.h      # Captura de pantalla (GDI)
+│   ├── NoteDetector.h       # Detección de notas (OpenCV)
+│   ├── KeySimulator.h       # Simulación de teclado
+│   ├── Controller.h         # Lógica principal
+│   └── Calibrator.h         # Modo calibración
+├── src/
+│   ├── ScreenCapture.cpp    # Implementación GDI
+│   ├── NoteDetector.cpp     # Detección con OpenCV
+│   ├── KeySimulator.cpp     # Envío de teclas (SendInput)
+│   ├── Controller.cpp       # Bucle principal
+│   ├── Calibrator.cpp       # Modo calibración
+│   └── main.cpp             # Punto de entrada
+├── CMakeLists.txt
+├── .gitignore
+└── README.md
+```
+---
+
+## 🔧 Configuración actual
+
+Los valores por defecto en `Config.h` son:
+
+| Parámetro | Valor |
+|---|---|
+| Región de captura | `X=437, Y=500, 490×190 px` |
+| Teclas por carril | `A`, `S`, `K`, `L` |
+| Línea objetivo (`hitY`) | `145` (relativo a la región capturada) |
+| Tolerancia (`tolY`) | `18 px` |
+| Vista de depuración | Desactivada por defecto |
+
+La lógica del bot **no pulsa al aparecer la nota**, sino cuando la nota **se aproxima a la línea objetivo**. Esto permite ajustar el punto de pulsación según la latencia del sistema.
+
+---
